@@ -1,20 +1,120 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>
-      Blank
-    </ion-title>
-  </ion-toolbar>
-</ion-header>
+<ion-content [fullscreen]="true" class="map-page-content" [scrollY]="false">
+  <!-- Map container -->
+  <div id="map"></div>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Blank</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <!-- Floating Top Bar -->
+  <div class="floating-top-bar">
+    <div class="brand-badge">
+      <div class="pulse-indicator"></div>
+      <span class="brand-title">GeoExplore</span>
+    </div>
 
-  <div id="container">
-    <strong>Ready to create an app?</strong>
-    <p>Start with Ionic <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
+    <div class="top-actions">
+      <!-- Layer toggle button -->
+      <button class="glass-icon-btn" (click)="alternarCapa()" title="Cambiar capa de mapa">
+        <ion-icon name="layers-outline"></ion-icon>
+      </button>
+
+      <!-- GPS Recenter button -->
+      <button
+        class="glass-icon-btn gps-btn"
+        [class.loading]="isLocating"
+        (click)="Punto()"
+        title="Mi ubicación"
+      >
+        <ion-icon name="locate-outline"></ion-icon>
+      </button>
+    </div>
+  </div>
+
+  <!-- Floating Tip Pill (Dismissible) -->
+  <div class="floating-hint-pill" *ngIf="showHint">
+    <div class="hint-content">
+      <ion-icon name="sparkles-outline" class="hint-icon"></ion-icon>
+      <span>Toca cualquier punto del mapa para guardar un lugar</span>
+    </div>
+    <button class="hint-close" (click)="descartarHint()">
+      <ion-icon name="close-outline"></ion-icon>
+    </button>
+  </div>
+
+  <!-- Floating Active Route Card -->
+  <div class="floating-route-card" *ngIf="rutaInfo">
+    <div class="route-info">
+      <div class="route-icon-box">
+        <ion-icon name="navigate-outline"></ion-icon>
+      </div>
+      <div class="route-texts">
+        <span class="route-label">Ruta trazada a pie</span>
+        <div class="route-metrics">
+          <strong>{{ rutaInfo.distancia }}</strong>
+          <span class="dot">•</span>
+          <span>~{{ rutaInfo.tiempo }}</span>
+        </div>
+      </div>
+    </div>
+    <button class="btn-clear-route" (click)="limpiarRuta()">
+      <ion-icon name="close-outline"></ion-icon>
+      <span>Cancelar</span>
+    </button>
+  </div>
+
+  <!-- Subtle Floating Selected Place Bottom Card (Non-intrusive) -->
+  <div class="floating-preview-card" *ngIf="lugarSeleccionado">
+    <div class="preview-media">
+      <img
+        *ngIf="lugarSeleccionado.photo"
+        [src]="lugarSeleccionado.photo"
+        alt="Foto"
+        class="preview-thumb"
+      />
+      <div *ngIf="!lugarSeleccionado.photo" class="preview-icon-thumb">
+        <ion-icon name="bookmark-outline"></ion-icon>
+      </div>
+    </div>
+
+    <div class="preview-details">
+      <div class="preview-top-row">
+        <h4 class="preview-name">{{ lugarSeleccionado.title || lugarSeleccionado.nombre || 'Lugar Guardado' }}</h4>
+        <button class="btn-close-preview" (click)="cerrarPreview()">
+          <ion-icon name="close-outline"></ion-icon>
+        </button>
+      </div>
+
+      <p class="preview-desc" *ngIf="lugarSeleccionado.description">
+        {{ lugarSeleccionado.description }}
+      </p>
+
+      <div class="preview-meta">
+        <span class="meta-badge" *ngIf="lugarSeleccionado.category">
+          {{ lugarSeleccionado.category }}
+        </span>
+        <span class="meta-dist" *ngIf="lugarSeleccionado.distText">
+          📏 {{ lugarSeleccionado.distText }}
+        </span>
+        <span class="meta-coords">
+          📍 {{ lugarSeleccionado.lat | number:'1.3-3' }}, {{ lugarSeleccionado.lng | number:'1.3-3' }}
+        </span>
+      </div>
+    </div>
+
+    <div class="preview-actions">
+      <button
+        class="action-btn route-btn"
+        (click)="trazarRuta(lugarSeleccionado.lat, lugarSeleccionado.lng)"
+        title="Trazar ruta"
+      >
+        <ion-icon name="navigate-outline"></ion-icon>
+        <span>Ruta</span>
+      </button>
+      <button
+        *ngIf="!lugarSeleccionado.isPoi"
+        class="action-btn detail-btn"
+        (click)="verDetalle(lugarSeleccionado)"
+        title="Ver detalle"
+      >
+        <ion-icon name="eye-outline"></ion-icon>
+      </button>
+    </div>
   </div>
 </ion-content>

@@ -1,0 +1,136 @@
+<ion-header class="ion-no-border profile-header">
+  <ion-toolbar>
+    <ion-title>Mi Perfil</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="profile-content ion-padding">
+  <!-- User Card -->
+  <div class="user-hero-card">
+    <div class="avatar-ring">
+      <div class="avatar-inner">
+        <ion-icon name="person-outline"></ion-icon>
+      </div>
+    </div>
+
+    <div class="user-info">
+      <h2 class="user-name">Explorador Urbano</h2>
+      <span class="user-badge">
+        <ion-icon name="sparkles-outline"></ion-icon> GeoExplore Pro
+      </span>
+    </div>
+  </div>
+
+  <!-- Statistics Grid -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-icon-box indigo">
+        <ion-icon name="location-outline"></ion-icon>
+      </div>
+      <div class="stat-data">
+        <span class="stat-number">{{ totalLugares }}</span>
+        <span class="stat-label">Lugares Guardados</span>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon-box pink">
+        <ion-icon name="camera-outline"></ion-icon>
+      </div>
+      <div class="stat-data">
+        <span class="stat-number">{{ totalConFoto }}</span>
+        <span class="stat-label">Con Fotografía</span>
+      </div>
+    </div>
+
+    <div class="stat-card full-width">
+      <div class="stat-icon-box emerald">
+        <ion-icon name="map-outline"></ion-icon>
+      </div>
+      <div class="stat-data">
+        <span class="stat-number">{{ totalPuntosInteres }}</span>
+        <span class="stat-label">Puntos de Interés Disponibles</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Local Notifications Section -->
+  <div class="settings-card notifications-card">
+    <div class="card-header-row">
+      <div class="header-left">
+        <div class="notif-icon-box">
+          <ion-icon name="notifications-outline"></ion-icon>
+        </div>
+        <div>
+          <h3 class="section-title" style="margin: 0;">Notificaciones Locales</h3>
+          <span class="section-desc" style="margin: 0;">Alertas de lugares guardados y rutas</span>
+        </div>
+      </div>
+      <span
+        class="perm-badge"
+        [class.granted]="permisoNotificaciones === 'granted'"
+        [class.prompt]="permisoNotificaciones !== 'granted'"
+      >
+        {{ permisoNotificaciones === 'granted' ? 'Activas' : 'Inactivas' }}
+      </span>
+    </div>
+
+    <div class="notif-actions">
+      <button
+        *ngIf="permisoNotificaciones !== 'granted'"
+        class="btn-request-perm"
+        (click)="solicitarPermisoNotificaciones()"
+      >
+        <ion-icon name="notifications-circle-outline"></ion-icon>
+        <span>Habilitar Permisos</span>
+      </button>
+
+      <button class="btn-test-notif" (click)="probarNotificacionLocal()">
+        <ion-icon name="notifications-outline"></ion-icon>
+        <span>Probar Notificación en Dispositivo</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Quick Options List -->
+  <div class="settings-card">
+    <h3 class="section-title">Accesos Rápidos</h3>
+
+    <div class="option-item" (click)="navegar('/map')">
+      <div class="option-icon-box">
+        <ion-icon name="map-outline"></ion-icon>
+      </div>
+      <div class="option-text">
+        <span class="option-title">Mapa Interactivo</span>
+        <span class="option-desc">Explorar y registrar nuevos lugares</span>
+      </div>
+      <ion-icon name="chevron-forward-outline" class="arrow-icon"></ion-icon>
+    </div>
+
+    <div class="option-item" (click)="navegar('/locations')">
+      <div class="option-icon-box">
+        <ion-icon name="location-outline"></ion-icon>
+      </div>
+      <div class="option-text">
+        <span class="option-title">Mis Ubicaciones</span>
+        <span class="option-desc">Gestionar lugares y rutas</span>
+      </div>
+      <ion-icon name="chevron-forward-outline" class="arrow-icon"></ion-icon>
+    </div>
+  </div>
+
+  <!-- Storage and Reset -->
+  <div class="settings-card danger-zone">
+    <h3 class="section-title">Almacenamiento Local</h3>
+    <p class="section-desc">Tus ubicaciones y fotos se guardan en el navegador / dispositivo local.</p>
+
+    <button class="btn-clear-data" (click)="confirmarLimpiarTodo()">
+      <ion-icon name="trash-outline"></ion-icon>
+      <span>Borrar todos los lugares guardados</span>
+    </button>
+  </div>
+
+  <div class="app-version">
+    <span>GeoExplore v1.2.0 • Diseñado con Ionic, Leaflet & Local Notifications</span>
+  </div>
+</ion-content>

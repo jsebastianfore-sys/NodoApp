@@ -1,0 +1,124 @@
+<ion-header class="ion-no-border modal-header">
+  <ion-toolbar>
+    <div class="header-content">
+      <div class="header-icon">
+        <ion-icon name="location-outline"></ion-icon>
+      </div>
+      <div>
+        <ion-title>Guardar Lugar</ion-title>
+        <span class="header-subtitle">Añade este punto a tus favoritos</span>
+      </div>
+    </div>
+    <ion-buttons slot="end">
+      <ion-button (click)="cancel()" class="close-btn">
+        <ion-icon name="close-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="modal-content ion-padding">
+  <!-- Hidden file input for desktop / gallery upload -->
+  <input
+    type="file"
+    id="file-upload-input"
+    accept="image/*"
+    style="display: none;"
+    (change)="onFileSelected($event)"
+  />
+
+  <!-- Coordinates Card -->
+  <div class="coords-badge">
+    <ion-icon name="location-outline"></ion-icon>
+    <span>Lat: {{ lat | number:'1.5-5' }}</span>
+    <span class="dot">•</span>
+    <span>Lng: {{ lng | number:'1.5-5' }}</span>
+  </div>
+
+  <!-- Form Section -->
+  <div class="form-container">
+    <!-- Title Input -->
+    <div class="input-group">
+      <label class="group-label">Nombre o título del lugar</label>
+      <div class="custom-input-box">
+        <ion-icon name="bookmark-outline" class="input-icon"></ion-icon>
+        <input
+          type="text"
+          [(ngModel)]="title"
+          placeholder="Ej: Cafetería Central, Mirador, Mi Hogar..."
+          maxlength="50"
+          class="custom-input"
+        />
+      </div>
+    </div>
+
+    <!-- Category selector -->
+    <div class="input-group">
+      <label class="group-label">Categoría</label>
+      <div class="chips-row">
+        <div
+          *ngFor="let cat of categories"
+          class="category-chip"
+          [class.active]="category === cat"
+          (click)="selectCategory(cat)"
+        >
+          {{ cat }}
+        </div>
+      </div>
+    </div>
+
+    <!-- Description Input -->
+    <div class="input-group">
+      <label class="group-label">Descripción o notas (opcional)</label>
+      <div class="custom-textarea-box">
+        <textarea
+          [(ngModel)]="description"
+          rows="3"
+          placeholder="¿Qué hace especial a este sitio? Recuerdos, consejos..."
+          class="custom-textarea"
+        ></textarea>
+      </div>
+    </div>
+
+    <!-- Photo Section -->
+    <div class="input-group">
+      <label class="group-label">Fotografía</label>
+
+      <!-- If photo exists -->
+      <div *ngIf="photoUrl()" class="photo-preview-card">
+        <img [src]="photoUrl()" alt="Vista previa" class="preview-img" />
+        <div class="photo-overlay">
+          <span class="photo-tag">
+            <ion-icon name="sparkles-outline"></ion-icon> Imagen adjunta
+          </span>
+          <button type="button" class="btn-delete-photo" (click)="removePhoto()">
+            <ion-icon name="trash-outline"></ion-icon>
+          </button>
+        </div>
+      </div>
+
+      <!-- If no photo yet -->
+      <div *ngIf="!photoUrl()" class="photo-uploader">
+        <div class="uploader-buttons">
+          <button type="button" class="photo-btn primary-photo" (click)="takePicture()">
+            <ion-icon name="camera-outline"></ion-icon>
+            <span>Tomar Foto</span>
+          </button>
+          <button type="button" class="photo-btn secondary-photo" (click)="takePicture()">
+            <ion-icon name="image-outline"></ion-icon>
+            <span>Galería</span>
+          </button>
+        </div>
+        <p class="uploader-hint">Puedes añadir una foto para verla de forma sutil en el mapa.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Save Action -->
+  <div class="save-wrapper">
+    <button class="save-btn" (click)="save()">
+      <ion-icon name="save-outline"></ion-icon>
+      <span>Guardar Lugar</span>
+    </button>
+  </div>
+</ion-content>
