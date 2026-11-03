@@ -35,6 +35,15 @@ import { AuthService } from '../../../../core/services/auth.service';
 
 type AuthViewMode = 'welcome' | 'login' | 'register' | 'forgot';
 
+/** Mínimo de caracteres de la contraseña: debe coincidir con el RegisterDto del backend. */
+const PASSWORD_MIN_LENGTH = 8;
+
+/**
+ * Pantalla de autenticación: bienvenida, inicio de sesión, registro y recuperación.
+ * La validación de esta pantalla es solo para dar respuesta inmediata al usuario;
+ * la validación real la hace el backend. Los mensajes de error que muestra
+ * llegan ya traducidos desde AuthService (err.message).
+ */
 @Component({
   selector: 'app-login',
   templateUrl: './login.page.html',
@@ -42,15 +51,15 @@ type AuthViewMode = 'welcome' | 'login' | 'register' | 'forgot';
   imports: [IonContent, IonIcon, IonSpinner, CommonModule, FormsModule],
 })
 export class LoginPage implements OnInit {
-  // Modo de vista actual: 'welcome' (como pantalla 1), 'login' (como pantalla 2), 'register' o 'forgot'
+  // Vista actual: 'welcome', 'login', 'register' o 'forgot'
   currentMode: AuthViewMode = 'welcome';
 
-  // Campos de formulario Login
+  // Formulario de inicio de sesión
   loginEmail = '';
   loginPassword = '';
   showLoginPassword = false;
 
-  // Campos de formulario Registro
+  // Formulario de registro
   registerName = '';
   registerEmail = '';
   registerPassword = '';
@@ -60,20 +69,20 @@ export class LoginPage implements OnInit {
   // Recuperación de contraseña
   forgotEmail = '';
 
-  // Selector de cuenta de Google directo
+  // Selector de cuenta de Google (deshabilitado: ver submitGoogleLogin)
   showGooglePicker = false;
   googlePickerEmail = '';
   googlePickerName = '';
 
-  // Estados de carga
+  // Estados de la vista
   isLoading = false;
   errorMessage = '';
 
-  private authService = inject(AuthService);
-  private router = inject(Router);
-  private toastCtrl = inject(ToastController);
-  private loadingCtrl = inject(LoadingController);
-  private alertCtrl = inject(AlertController);
+  private readonly authService = inject(AuthService);
+  private readonly router = inject(Router);
+  private readonly toastCtrl = inject(ToastController);
+  private readonly loadingCtrl = inject(LoadingController);
+  private readonly alertCtrl = inject(AlertController);
 
   constructor() {
     addIcons({
@@ -98,30 +107,28 @@ export class LoginPage implements OnInit {
     });
   }
 
-  ngOnInit() {
-    // Si ya existe una sesión guardada, se puede ingresar directo o permanecer en login si lo desea
+  ngOnInit(): void {
+    // Si ya hay sesión (cargada al arrancar la app), entra directo al mapa
     if (this.authService.isAuthenticated()) {
-      // Dejamos en welcome con opción de continuar o iniciar otra cuenta
+      this.router.navigate(['/map'], { replaceUrl: true });
     }
   }
 
-  setMode(mode: AuthViewMode) {
+  setMode(mode: AuthViewMode): void {
     this.errorMessage = '';
     this.currentMode = mode;
   }
 
-  toggleLoginPassword() {
+  toggleLoginPassword(): void {
     this.showLoginPassword = !this.showLoginPassword;
   }
 
-  toggleRegisterPassword() {
+  toggleRegisterPassword(): void {
     this.showRegisterPassword = !this.showRegisterPassword;
   }
 
-  /**
-   * Procesa el inicio de sesión con correo y contraseña
-   */
-  async submitLogin() {
+  /** Inicio de sesión con correo y contraseña contra el backend. */
+  async submitLogin(): Promise<void> {
     this.errorMessage = '';
 
     if (!this.loginEmail.trim() || !this.loginPassword) {
@@ -132,11 +139,11 @@ export class LoginPage implements OnInit {
     this.isLoading = true;
     try {
       const user = await this.authService.login(
-        this.loginEmail,
+        this.loginEmail.trim(),
         this.loginPassword,
       );
       await this.mostrarToast(`¡Bienvenido de nuevo, ${user.nombre}!`);
-      this.router.navigate(['/map']);
+      this.router.navigate(['/map'], { replaceUrl: true });
     } catch (err: any) {
       this.errorMessage = err.message || 'Error al iniciar sesión.';
     } finally {
@@ -144,10 +151,8 @@ export class LoginPage implements OnInit {
     }
   }
 
-  /**
-   * Procesa el registro de nuevo usuario
-   */
-  async submitRegister() {
+  /** Registro de una cuenta nueva; al terminar, inicia sesión automáticamente. */
+  async submitRegister(): Promise<void> {
     this.errorMessage = '';
 
     if (
@@ -164,22 +169,22 @@ export class LoginPage implements OnInit {
       return;
     }
 
-    if (this.registerPassword.length < 6) {
-      this.errorMessage = 'La contraseña debe tener al menos 6 caracteres.';
+    if (this.registerPassword.length < PASSWORD_MIN_LENGTH) {
+      this.errorMessage = `La contraseña debe tener al menos ${PASSWORD_MIN_LENGTH} caracteres.`;
       return;
     }
 
     this.isLoading = true;
     try {
       const user = await this.authService.register(
-        this.registerName,
-        this.registerEmail,
+        this.registerName.trim(),
+        this.registerEmail.trim(),
         this.registerPassword,
       );
       await this.mostrarToast(
         `¡Cuenta creada con éxito! Bienvenido, ${user.nombre}`,
       );
-      this.router.navigate(['/map']);
+      this.router.navigate(['/map'], { replaceUrl: true });
     } catch (err: any) {
       this.errorMessage = err.message || 'Error al crear la cuenta.';
     } finally {
@@ -188,130 +193,44 @@ export class LoginPage implements OnInit {
   }
 
   /**
-   * Inicio de sesión con Google:
-   * Si hay Client ID configurado usa la ventana oficial de Google (accounts.google.com).
-   * Si aún no está configurado, abre el selector de cuentas de Google para ingresar
-   * con tu correo de Google al instante sin registros ni contraseñas.
+   * Inicio de sesión con Google: pendiente.
+   * Antes abría un selector que dejaba entrar con cualquier correo sin verificarlo;
+   * se deshabilitó por seguridad hasta implementar la verificación en el backend.
    */
-  async submitGoogleLogin() {
+  async submitGoogleLogin(): Promise<void> {
     this.errorMessage = '';
-    const clientId = this.authService.getGoogleClientId();
-
-    if (clientId) {
-      this.isLoading = true;
-      try {
-        const user = await this.authService.loginWithGoogle();
-        await this.mostrarToast(
-          `¡Bienvenido, ${user.nombre}! Has iniciado sesión con Google.`,
-        );
-        this.router.navigate(['/map']);
-      } catch (err: any) {
-        if (err.message === 'MISSING_CLIENT_ID') {
-          this.showGooglePicker = true;
-        } else {
-          this.errorMessage = err.message || 'No se pudo conectar con Google.';
-        }
-      } finally {
-        this.isLoading = false;
-      }
-    } else {
-      // Abre el selector de cuenta de Google directo
-      this.showGooglePicker = true;
-    }
-  }
-
-  /**
-   * Confirma el acceso con la cuenta de Google seleccionada
-   */
-  async confirmGooglePickerLogin() {
-    this.errorMessage = '';
-
-    if (
-      !this.googlePickerEmail.trim() ||
-      !this.googlePickerEmail.includes('@')
-    ) {
-      this.errorMessage =
-        'Por favor ingresa un correo de Google válido (ej: tu.correo@gmail.com).';
-      return;
-    }
-
-    this.isLoading = true;
-    try {
-      const user = await this.authService.loginWithGoogleEmail(
-        this.googlePickerEmail,
-        this.googlePickerName,
-      );
-      this.showGooglePicker = false;
-      await this.mostrarToast(
-        `¡Cuenta Google verificada! Bienvenido, ${user.nombre}`,
-      );
-      this.router.navigate(['/map']);
-    } catch (err: any) {
-      this.errorMessage =
-        err.message || 'Error al conectar con tu cuenta de Google.';
-    } finally {
-      this.isLoading = false;
-    }
-  }
-
-  closeGooglePicker() {
     this.showGooglePicker = false;
-  }
-
-  /**
-   * Solicita el Client ID de Google Cloud si no está configurado aún en environment.ts
-   */
-  async solicitarGoogleClientId() {
-    const alert = await this.alertCtrl.create({
-      header: 'Autenticación Real con Google',
-      subHeader: 'Se requiere tu Client ID de Google Cloud',
-      message:
-        'Para abrir la ventana oficial de Google, ingresa el Client ID OAuth 2.0 de tu consola de Google Cloud (también puedes definirlo en src/environments/environment.ts):',
-      inputs: [
-        {
-          name: 'clientId',
-          type: 'text',
-          placeholder: 'ej: 123456789-xyz.apps.googleusercontent.com',
-          value: this.authService.getGoogleClientId(),
-        },
-      ],
-      buttons: [
-        {
-          text: 'Cancelar',
-          role: 'cancel',
-        },
-        {
-          text: 'Conectar con Google',
-          handler: (data) => {
-            const val = (data?.clientId || '').trim();
-            if (val) {
-              this.authService.setGoogleClientId(val);
-              setTimeout(() => this.submitGoogleLogin(), 250);
-            } else {
-              this.errorMessage =
-                'Debes ingresar un Google Client ID válido para autenticar con Google.';
-            }
-          },
-        },
-      ],
-    });
-
-    await alert.present();
-  }
-
-  /**
-   * Notificación para redes sociales aún en desarrollo
-   */
-  async socialLoginComingSoon(provider: string) {
     await this.mostrarToast(
-      `El acceso con ${provider} estará disponible próximamente. Por favor inicia sesión con Google o correo.`,
+      'El inicio de sesión con Google estará disponible próximamente.',
     );
   }
 
-  /**
-   * Envío de correo de recuperación
-   */
-  async submitForgotPassword() {
+  /** Se conserva porque la plantilla lo referencia; el selector ya no se abre. */
+  async confirmGooglePickerLogin(): Promise<void> {
+    this.showGooglePicker = false;
+    await this.submitGoogleLogin();
+  }
+
+  closeGooglePicker(): void {
+    this.showGooglePicker = false;
+  }
+
+  /** Se conserva porque la plantilla lo referencia. */
+  async solicitarGoogleClientId(): Promise<void> {
+    await this.submitGoogleLogin();
+  }
+
+  /** Aviso para proveedores aún no disponibles (Apple, Facebook). */
+  async socialLoginComingSoon(provider: string): Promise<void> {
+    await this.mostrarToast(
+      `El acceso con ${provider} estará disponible próximamente. Por favor inicia sesión con tu correo.`,
+    );
+  }
+
+  /** Recuperación de contraseña: pendiente en el backend. */
+  async submitForgotPassword(): Promise<void> {
+    this.errorMessage = '';
+
     if (!this.forgotEmail.trim()) {
       this.errorMessage = 'Por favor escribe tu correo electrónico.';
       return;
@@ -319,7 +238,7 @@ export class LoginPage implements OnInit {
 
     this.isLoading = true;
     try {
-      await this.authService.requestPasswordReset(this.forgotEmail);
+      await this.authService.requestPasswordReset(this.forgotEmail.trim());
       await this.mostrarToast('Se enviaron las instrucciones a tu correo.');
       this.setMode('login');
     } catch (err: any) {
@@ -330,7 +249,7 @@ export class LoginPage implements OnInit {
     }
   }
 
-  private async mostrarToast(msg: string) {
+  private async mostrarToast(msg: string): Promise<void> {
     const toast = await this.toastCtrl.create({
       message: msg,
       duration: 2500,
