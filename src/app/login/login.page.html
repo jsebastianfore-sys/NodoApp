@@ -1,0 +1,526 @@
+<ion-content [fullscreen]="true" class="auth-content">
+  <div class="auth-container">
+
+    <!-- =================================================================== -->
+    <!-- 1. VISTA: BIENVENIDA / ONBOARDING (Similar a Pantalla 1 del ejemplo) -->
+    <!-- =================================================================== -->
+    <div class="view-wrapper welcome-view" *ngIf="currentMode === 'welcome'">
+      
+      <!-- Ilustración moderna estilo Vector Art -->
+      <div class="hero-illustration-box">
+        <svg class="illustration-svg" viewBox="0 0 400 340" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- Fondo decorativo orgánico -->
+          <circle cx="200" cy="180" r="140" fill="var(--ion-color-primary)" fill-opacity="0.08" />
+          <path d="M70 240C90 190 140 180 200 190C260 200 310 170 330 220" stroke="var(--ion-color-primary)" stroke-width="2" stroke-dasharray="6 6" stroke-opacity="0.3"/>
+          <line x1="50" y1="280" x2="350" y2="280" stroke="#cbd5e1" stroke-width="2" stroke-linecap="round"/>
+
+          <!-- Planta a la derecha -->
+          <g class="illustration-plant" transform="translate(300, 190)">
+            <!-- Maceta -->
+            <polygon points="12,90 28,90 32,55 8,55" fill="#475569"/>
+            <!-- Tallos y flores/hojas coral/índigo -->
+            <path d="M20 55 Q20 30 10 15" stroke="#94a3b8" stroke-width="2" fill="none"/>
+            <path d="M20 55 Q25 35 32 20" stroke="#94a3b8" stroke-width="2" fill="none"/>
+            <circle cx="10" cy="15" r="9" fill="#f97316"/>
+            <circle cx="32" cy="20" r="8" fill="#fb923c"/>
+            <circle cx="20" cy="32" r="7" fill="#ea580c"/>
+          </g>
+
+          <!-- Silla minimalista -->
+          <g class="illustration-chair">
+            <!-- Patas de la silla -->
+            <line x1="125" y1="205" x2="115" y2="280" stroke="#334155" stroke-width="2.5" stroke-linecap="round"/>
+            <line x1="175" y1="205" x2="185" y2="280" stroke="#334155" stroke-width="2.5" stroke-linecap="round"/>
+            <!-- Asiento y espaldar -->
+            <rect x="115" y="198" width="70" height="8" rx="3" fill="#cbd5e1"/>
+            <line x1="122" y1="125" x2="122" y2="198" stroke="#334155" stroke-width="2.5" stroke-linecap="round"/>
+            <rect x="116" y="125" width="45" height="40" rx="4" fill="#e2e8f0" stroke="#94a3b8" stroke-width="1.5"/>
+          </g>
+
+          <!-- Personaje explorador sentado -->
+          <g class="illustration-character">
+            <!-- Cabeza & Cabello -->
+            <ellipse cx="190" cy="98" rx="14" ry="17" fill="#fbcfe8"/>
+            <path d="M178 95 C176 80, 202 75, 204 90 C204 95, 195 90, 190 92 C185 94, 180 97, 178 95 Z" fill="#0f172a"/>
+
+            <!-- Cuerpo / Suéter color primario/coral -->
+            <path d="M170 120 C165 130, 160 170, 165 190 L205 190 C210 170, 215 130, 205 120 Z" fill="var(--ion-color-primary)"/>
+
+            <!-- Brazos y taza de café -->
+            <path d="M172 130 Q160 150 170 165" stroke="var(--ion-color-primary-shade)" stroke-width="10" stroke-linecap="round" fill="none"/>
+            <path d="M198 130 Q215 145 200 165" stroke="var(--ion-color-primary-shade)" stroke-width="10" stroke-linecap="round" fill="none"/>
+            <!-- Taza blanca -->
+            <rect x="195" y="152" width="12" height="15" rx="3" fill="#ffffff" stroke="#cbd5e1" stroke-width="1"/>
+            <path d="M207 155 Q212 158 207 163" stroke="#cbd5e1" stroke-width="1" fill="none"/>
+
+            <!-- Laptop sobre las piernas -->
+            <polygon points="180,185 240,185 235,160 185,160" fill="#475569"/>
+            <rect x="188" y="162" width="42" height="20" rx="2" fill="#0f172a"/>
+            <!-- Manzana o pin en laptop -->
+            <circle cx="209" cy="172" r="3" fill="#ffffff" fill-opacity="0.9"/>
+            <polygon points="175,185 245,185 240,190 178,190" fill="#94a3b8"/>
+
+            <!-- Piernas cruzadas estilo minimalista -->
+            <!-- Pierna base -->
+            <path d="M175 190 L210 190 L225 250 L245 280" stroke="#0f172a" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+            <!-- Zapato -->
+            <ellipse cx="250" cy="280" rx="9" ry="5" fill="#020617"/>
+            <!-- Pierna superior -->
+            <path d="M185 190 Q220 200 230 220 L235 280" stroke="#1e293b" stroke-width="11" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+            <ellipse cx="238" cy="281" rx="9" ry="5" fill="#020617"/>
+          </g>
+
+          <!-- Marcador flotante de GeoExplore -->
+          <g class="floating-pin" transform="translate(65, 80)">
+            <circle cx="20" cy="20" r="18" fill="var(--ion-color-primary)" fill-opacity="0.15" />
+            <path d="M20 7 C14 7 9 12 9 18 C9 26 20 33 20 33 C20 33 31 26 31 18 C31 12 26 7 20 7 Z" fill="var(--ion-color-primary)"/>
+            <circle cx="20" cy="18" r="4.5" fill="#ffffff"/>
+          </g>
+        </svg>
+      </div>
+
+      <!-- Título y subtítulo destacados -->
+      <div class="hero-text-box">
+        <h1 class="hero-title">
+          Descubre Tu Próximo <span class="gradient-text">Destino Aquí</span>
+        </h1>
+        <p class="hero-subtitle">
+          Explora rutas fascinantes, guarda tus lugares favoritos y navega en tiempo real con GeoExplore.
+        </p>
+      </div>
+
+      <!-- Botón directo de Google en la primera pantalla -->
+      <div class="welcome-google-wrap">
+        <button class="btn-google-prominent welcome-google-btn" [disabled]="isLoading" (click)="submitGoogleLogin()">
+          <svg class="google-svg" viewBox="0 0 24 24" width="22" height="22">
+            <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17Z"/>
+            <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.27 21.36 7.35 24 12 24Z"/>
+            <path fill="#FBBC05" d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.25C.45 8.16 0 9.94 0 12s.45 3.84 1.25 5.42l4.03-3.15Z"/>
+            <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.35 0 3.27 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98Z"/>
+          </svg>
+          <span>Continuar con Google</span>
+        </button>
+      </div>
+
+      <div class="welcome-or-divider">
+        <span class="divider-line"></span>
+        <span class="divider-text">o con tu correo</span>
+        <span class="divider-line"></span>
+      </div>
+
+      <!-- Botones de Acción (Login / Register como en la imagen) -->
+      <div class="welcome-actions-row">
+        <button class="btn-primary-pill" (click)="setMode('login')">
+          <span>Iniciar Sesión</span>
+          <ion-icon name="arrow-forward-outline"></ion-icon>
+        </button>
+
+        <button class="btn-secondary-pill" (click)="setMode('register')">
+          <span>Registrarse</span>
+        </button>
+      </div>
+
+    </div>
+
+
+    <!-- =================================================================== -->
+    <!-- 2. VISTA: INICIAR SESIÓN (Similar a Pantalla 2 del ejemplo)          -->
+    <!-- =================================================================== -->
+    <div class="view-wrapper auth-form-view" *ngIf="currentMode === 'login'">
+      
+      <!-- Barra superior con regreso -->
+      <div class="top-nav-bar">
+        <button class="btn-back-circle" (click)="setMode('welcome')" title="Volver">
+          <ion-icon name="chevron-back-outline"></ion-icon>
+        </button>
+        <span class="nav-brand">GeoExplore</span>
+      </div>
+
+      <!-- Encabezado del Formulario -->
+      <div class="form-header">
+        <h2 class="form-title">Iniciar Sesión</h2>
+        <p class="form-subtitle">¡Bienvenido de nuevo! Te extrañamos.</p>
+      </div>
+
+      <!-- Banner de error si existe -->
+      <div class="error-banner" *ngIf="errorMessage">
+        <ion-icon name="help-circle-outline"></ion-icon>
+        <span>{{ errorMessage }}</span>
+      </div>
+
+      <!-- Formulario de Campos -->
+      <div class="form-fields">
+        <!-- Campo Correo -->
+        <div class="input-group">
+          <label class="input-label">Correo Electrónico</label>
+          <div class="input-wrapper">
+            <ion-icon name="mail-outline" class="field-icon"></ion-icon>
+            <input
+              type="email"
+              class="custom-input"
+              [(ngModel)]="loginEmail"
+              placeholder="tu.correo@ejemplo.com"
+              autocomplete="email"
+              (keyup.enter)="submitLogin()"
+            />
+          </div>
+        </div>
+
+        <!-- Campo Contraseña -->
+        <div class="input-group">
+          <label class="input-label">Contraseña</label>
+          <div class="input-wrapper">
+            <ion-icon name="lock-closed-outline" class="field-icon"></ion-icon>
+            <input
+              [type]="showLoginPassword ? 'text' : 'password'"
+              class="custom-input"
+              [(ngModel)]="loginPassword"
+              placeholder="••••••••"
+              autocomplete="current-password"
+              (keyup.enter)="submitLogin()"
+            />
+            <button
+              type="button"
+              class="btn-toggle-eye"
+              (click)="toggleLoginPassword()"
+              tabindex="-1"
+            >
+              <ion-icon [name]="showLoginPassword ? 'eye-off-outline' : 'eye-outline'"></ion-icon>
+            </button>
+          </div>
+        </div>
+
+        <!-- Enlace ¿Olvidaste tu contraseña? -->
+        <div class="forgot-row">
+          <a class="forgot-link" (click)="setMode('forgot')">
+            ¿Olvidaste tu contraseña?
+          </a>
+        </div>
+
+        <!-- Botón Principal: Sign in / Iniciar Sesión -->
+        <button
+          class="btn-submit-primary"
+          [disabled]="isLoading"
+          (click)="submitLogin()"
+        >
+          <ion-spinner *ngIf="isLoading" name="crescent"></ion-spinner>
+          <span *ngIf="!isLoading">Iniciar Sesión</span>
+        </button>
+
+        <!-- Enlace para crear nueva cuenta -->
+        <div class="switch-mode-row">
+          <span class="switch-mode-label">¿Aún no tienes cuenta?</span>
+          <button class="btn-link-action" (click)="setMode('register')">
+            Crear nueva cuenta
+          </button>
+        </div>
+
+        <!-- Divisor Social -->
+        <div class="social-divider">
+          <span class="divider-line"></span>
+          <span class="divider-text">O continúa con</span>
+          <span class="divider-line"></span>
+        </div>
+
+        <!-- Botón destacado de Google (cumple petición específica) -->
+        <button
+          class="btn-google-prominent"
+          [disabled]="isLoading"
+          (click)="submitGoogleLogin()"
+        >
+          <svg class="google-svg" viewBox="0 0 24 24" width="22" height="22">
+            <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17Z"/>
+            <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.27 21.36 7.35 24 12 24Z"/>
+            <path fill="#FBBC05" d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.25C.45 8.16 0 9.94 0 12s.45 3.84 1.25 5.42l4.03-3.15Z"/>
+            <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.35 0 3.27 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98Z"/>
+          </svg>
+          <span>Continuar con Google</span>
+        </button>
+
+        <!-- Redes sociales complementarias como en el diseño de referencia -->
+        <div class="social-icons-row">
+          <button class="social-circle-btn" (click)="submitGoogleLogin()" title="Google">
+            <ion-icon name="logo-google"></ion-icon>
+          </button>
+          <button class="social-circle-btn" (click)="socialLoginComingSoon('Facebook')" title="Facebook">
+            <ion-icon name="logo-facebook"></ion-icon>
+          </button>
+          <button class="social-circle-btn" (click)="socialLoginComingSoon('Apple')" title="Apple">
+            <ion-icon name="logo-apple"></ion-icon>
+          </button>
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- =================================================================== -->
+    <!-- 3. VISTA: REGISTRARSE                                                -->
+    <!-- =================================================================== -->
+    <div class="view-wrapper auth-form-view" *ngIf="currentMode === 'register'">
+      
+      <div class="top-nav-bar">
+        <button class="btn-back-circle" (click)="setMode('welcome')" title="Volver">
+          <ion-icon name="chevron-back-outline"></ion-icon>
+        </button>
+        <span class="nav-brand">GeoExplore</span>
+      </div>
+
+      <div class="form-header">
+        <h2 class="form-title">Crear Cuenta</h2>
+        <p class="form-subtitle">Regístrate para guardar tus rutas y lugares favoritos.</p>
+      </div>
+
+      <div class="error-banner" *ngIf="errorMessage">
+        <ion-icon name="help-circle-outline"></ion-icon>
+        <span>{{ errorMessage }}</span>
+      </div>
+
+      <div class="form-fields">
+        <!-- Nombre completo -->
+        <div class="input-group">
+          <label class="input-label">Nombre Completo</label>
+          <div class="input-wrapper">
+            <ion-icon name="person-outline" class="field-icon"></ion-icon>
+            <input
+              type="text"
+              class="custom-input"
+              [(ngModel)]="registerName"
+              placeholder="Ej. Juan Pérez"
+              autocomplete="name"
+            />
+          </div>
+        </div>
+
+        <!-- Correo Electrónico -->
+        <div class="input-group">
+          <label class="input-label">Correo Electrónico</label>
+          <div class="input-wrapper">
+            <ion-icon name="mail-outline" class="field-icon"></ion-icon>
+            <input
+              type="email"
+              class="custom-input"
+              [(ngModel)]="registerEmail"
+              placeholder="tu.correo@ejemplo.com"
+              autocomplete="email"
+            />
+          </div>
+        </div>
+
+        <!-- Contraseña -->
+        <div class="input-group">
+          <label class="input-label">Contraseña</label>
+          <div class="input-wrapper">
+            <ion-icon name="lock-closed-outline" class="field-icon"></ion-icon>
+            <input
+              [type]="showRegisterPassword ? 'text' : 'password'"
+              class="custom-input"
+              [(ngModel)]="registerPassword"
+              placeholder="Mínimo 6 caracteres"
+              autocomplete="new-password"
+            />
+            <button
+              type="button"
+              class="btn-toggle-eye"
+              (click)="toggleRegisterPassword()"
+              tabindex="-1"
+            >
+              <ion-icon [name]="showRegisterPassword ? 'eye-off-outline' : 'eye-outline'"></ion-icon>
+            </button>
+          </div>
+        </div>
+
+        <!-- Confirmar Contraseña -->
+        <div class="input-group">
+          <label class="input-label">Confirmar Contraseña</label>
+          <div class="input-wrapper">
+            <ion-icon name="shield-checkmark-outline" class="field-icon"></ion-icon>
+            <input
+              [type]="showRegisterPassword ? 'text' : 'password'"
+              class="custom-input"
+              [(ngModel)]="registerConfirmPassword"
+              placeholder="Repite tu contraseña"
+              autocomplete="new-password"
+              (keyup.enter)="submitRegister()"
+            />
+          </div>
+        </div>
+
+        <!-- Botón Registrarse -->
+        <button
+          class="btn-submit-primary"
+          [disabled]="isLoading"
+          (click)="submitRegister()"
+        >
+          <ion-spinner *ngIf="isLoading" name="crescent"></ion-spinner>
+          <span *ngIf="!isLoading">Crear Cuenta</span>
+        </button>
+
+        <div class="switch-mode-row">
+          <span class="switch-mode-label">¿Ya tienes una cuenta?</span>
+          <button class="btn-link-action" (click)="setMode('login')">
+            Iniciar Sesión
+          </button>
+        </div>
+
+        <div class="social-divider">
+          <span class="divider-line"></span>
+          <span class="divider-text">O regístrate con</span>
+          <span class="divider-line"></span>
+        </div>
+
+        <button
+          class="btn-google-prominent"
+          [disabled]="isLoading"
+          (click)="submitGoogleLogin()"
+        >
+          <svg class="google-svg" viewBox="0 0 24 24" width="22" height="22">
+            <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17Z"/>
+            <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.27 21.36 7.35 24 12 24Z"/>
+            <path fill="#FBBC05" d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.25C.45 8.16 0 9.94 0 12s.45 3.84 1.25 5.42l4.03-3.15Z"/>
+            <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.35 0 3.27 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98Z"/>
+          </svg>
+          <span>Registrarse con Google</span>
+        </button>
+
+      </div>
+
+    </div>
+
+
+    <!-- =================================================================== -->
+    <!-- 4. VISTA: RECUPERAR CONTRASEÑA                                       -->
+    <!-- =================================================================== -->
+    <div class="view-wrapper auth-form-view" *ngIf="currentMode === 'forgot'">
+      
+      <div class="top-nav-bar">
+        <button class="btn-back-circle" (click)="setMode('login')" title="Volver">
+          <ion-icon name="chevron-back-outline"></ion-icon>
+        </button>
+        <span class="nav-brand">Recuperación</span>
+      </div>
+
+      <div class="form-header">
+        <h2 class="form-title">Recuperar Contraseña</h2>
+        <p class="form-subtitle">Te enviaremos un enlace para restablecer tu contraseña.</p>
+      </div>
+
+      <div class="error-banner" *ngIf="errorMessage">
+        <ion-icon name="help-circle-outline"></ion-icon>
+        <span>{{ errorMessage }}</span>
+      </div>
+
+      <div class="form-fields">
+        <div class="input-group">
+          <label class="input-label">Correo Registrado</label>
+          <div class="input-wrapper">
+            <ion-icon name="mail-outline" class="field-icon"></ion-icon>
+            <input
+              type="email"
+              class="custom-input"
+              [(ngModel)]="forgotEmail"
+              placeholder="tu.correo@ejemplo.com"
+              (keyup.enter)="submitForgotPassword()"
+            />
+          </div>
+        </div>
+
+        <button
+          class="btn-submit-primary"
+          [disabled]="isLoading"
+          (click)="submitForgotPassword()"
+        >
+          <ion-spinner *ngIf="isLoading" name="crescent"></ion-spinner>
+          <span *ngIf="!isLoading">Enviar Instrucciones</span>
+        </button>
+
+        <div class="switch-mode-row">
+          <button class="btn-link-action" (click)="setMode('login')">
+            ← Regresar al inicio de sesión
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- =================================================================== -->
+    <!-- 5. MODAL SELECTOR DE CUENTA DE GOOGLE (GOOGLE ACCOUNT CHOOSER)      -->
+    <!-- =================================================================== -->
+    <div class="google-picker-backdrop" *ngIf="showGooglePicker" (click)="closeGooglePicker()">
+      <div class="google-picker-card" (click)="$event.stopPropagation()">
+        
+        <div class="google-picker-header">
+          <div class="google-icon-ring">
+            <svg class="google-svg" viewBox="0 0 24 24" width="26" height="26">
+              <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17Z"/>
+              <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.25v3.15C3.27 21.36 7.35 24 12 24Z"/>
+              <path fill="#FBBC05" d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.25C.45 8.16 0 9.94 0 12s.45 3.84 1.25 5.42l4.03-3.15Z"/>
+              <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.35 0 3.27 2.64 1.25 6.58l4.03 3.15c.95-2.83 3.6-4.98 6.72-4.98Z"/>
+            </svg>
+          </div>
+          <button class="btn-close-picker" (click)="closeGooglePicker()">
+            <ion-icon name="close-outline"></ion-icon>
+          </button>
+        </div>
+
+        <div class="google-picker-titles">
+          <h3 class="picker-title">Acceder con Google</h3>
+          <p class="picker-desc">Elige o ingresa tu correo de Google para acceder a <strong>GeoExplore</strong> sin registros ni contraseñas.</p>
+        </div>
+
+        <div class="error-banner" *ngIf="errorMessage" style="margin-bottom: 14px;">
+          <ion-icon name="help-circle-outline"></ion-icon>
+          <span>{{ errorMessage }}</span>
+        </div>
+
+        <div class="google-picker-body">
+          <div class="picker-input-group">
+            <label class="picker-input-label">Tu Correo de Google / Gmail</label>
+            <div class="picker-input-box">
+              <ion-icon name="mail-outline"></ion-icon>
+              <input
+                type="email"
+                class="picker-input-field"
+                [(ngModel)]="googlePickerEmail"
+                placeholder="ejemplo@gmail.com"
+                (keyup.enter)="confirmGooglePickerLogin()"
+              />
+            </div>
+          </div>
+
+          <div class="picker-input-group">
+            <label class="picker-input-label">Nombre para tu perfil (Opcional)</label>
+            <div class="picker-input-box">
+              <ion-icon name="person-outline"></ion-icon>
+              <input
+                type="text"
+                class="picker-input-field"
+                [(ngModel)]="googlePickerName"
+                placeholder="Tu Nombre"
+                (keyup.enter)="confirmGooglePickerLogin()"
+              />
+            </div>
+          </div>
+
+          <button class="btn-google-confirm" [disabled]="isLoading" (click)="confirmGooglePickerLogin()">
+            <ion-spinner *ngIf="isLoading" name="crescent"></ion-spinner>
+            <span *ngIf="!isLoading">Continuar a GeoExplore</span>
+            <ion-icon *ngIf="!isLoading" name="arrow-forward-outline"></ion-icon>
+          </button>
+
+          <p class="picker-privacy-note">
+            Ingreso automático con Google. No requerirás ingresar ni recordar ninguna contraseña.
+          </p>
+
+          <button class="btn-configure-client-id" (click)="solicitarGoogleClientId()">
+            <span>¿Tienes un Client ID de Google Cloud? Configúralo aquí</span>
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</ion-content>
+

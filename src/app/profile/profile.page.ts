@@ -11,11 +11,14 @@ import {
   personOutline, locationOutline, cameraOutline,
   mapOutline, trashOutline, shieldCheckmarkOutline,
   sparklesOutline, chevronForwardOutline, informationCircleOutline,
-  notificationsOutline, notificationsCircleOutline, checkmarkCircleOutline
+  notificationsOutline, notificationsCircleOutline, checkmarkCircleOutline,
+  logOutOutline, logoGoogle
 } from 'ionicons/icons';
 import { LocationsService } from '../services/locations';
 import { NotificationsService } from '../services/notifications.service';
+import { AuthService, UserProfile } from '../services/auth.service';
 import { PUNTOS } from '../home/home.page';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-profile',
@@ -31,6 +34,9 @@ export class ProfilePage implements OnInit {
   totalConFoto = 0;
   totalPuntosInteres = PUNTOS.length;
   permisoNotificaciones: 'granted' | 'denied' | 'prompt' = 'prompt';
+
+  public authService = inject(AuthService);
+  public currentUser$: Observable<UserProfile | null> = this.authService.currentUser$;
 
   private locationsService = inject(LocationsService);
   private notificationsService = inject(NotificationsService);
@@ -51,7 +57,9 @@ export class ProfilePage implements OnInit {
       informationCircleOutline,
       notificationsOutline,
       notificationsCircleOutline,
-      checkmarkCircleOutline
+      checkmarkCircleOutline,
+      logOutOutline,
+      logoGoogle
     });
   }
 
@@ -97,6 +105,26 @@ export class ProfilePage implements OnInit {
             localStorage.removeItem('misUbicaciones');
             this.locationsService.cargarUbicaciones();
             this.mostrarToast('Se han eliminado todos los lugares guardados.');
+          }
+        }
+      ]
+    });
+
+    await alert.present();
+  }
+
+  async confirmarCerrarSesion() {
+    const alert = await this.alertCtrl.create({
+      header: 'Cerrar Sesión',
+      message: '¿Deseas salir de tu cuenta?',
+      buttons: [
+        { text: 'Cancelar', role: 'cancel' },
+        {
+          text: 'Cerrar Sesión',
+          role: 'destructive',
+          handler: () => {
+            this.authService.logout();
+            this.mostrarToast('Has cerrado sesión correctamente.');
           }
         }
       ]
