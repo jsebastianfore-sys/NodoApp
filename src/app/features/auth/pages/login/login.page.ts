@@ -31,7 +31,10 @@ import {
   helpCircleOutline,
   closeOutline,
 } from 'ionicons/icons';
-import { AuthService, UserProfile } from '../core/services/auth.service';
+import {
+  AuthService,
+  UserProfile,
+} from '../../../../core/services/auth.service';
 
 type AuthViewMode = 'welcome' | 'login' | 'register' | 'forgot';
 

@@ -31,10 +31,10 @@ import {
   sparklesOutline,
   compassOutline,
 } from 'ionicons/icons';
-import { LocationModalComponent } from '../shared/components/location-modal/location-modal.component';
-import { PlaceDetailModalComponent } from '../shared/components/place-detail-modal/place-detail-modal.component';
-import { LocationsService } from '../core/services/locations.service';
-import { NotificationsService } from '../core/services/notifications.service';
+import { LocationModalComponent } from '../../../../shared/components/location-modal/location-modal.component';
+import { PlaceDetailModalComponent } from '../../../../shared/components/place-detail-modal/place-detail-modal.component';
+import { LocationsService } from '../../../../core/services/locations.service';
+import { NotificationsService } from '../../../../core/services/notifications.service';
 
 export interface PuntoInteres {
   nombre: string;
@@ -167,13 +167,13 @@ export const PUNTOS: PuntoInteres[] = [
 ];
 
 @Component({
-  selector: 'app-home',
-  templateUrl: 'home.page.html',
-  styleUrls: ['home.page.scss'],
+  selector: 'app-map',
+  templateUrl: 'map.page.html',
+  styleUrls: ['map.page.scss'],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   imports: [IonContent, IonIcon, CommonModule],
 })
-export class HomePage implements AfterViewInit, OnInit {
+export class MapPage implements AfterViewInit, OnInit {
   private map!: L.Map;
   public ubicacionUsuario: { lat: number; lng: number } = {
     lat: 4.60971,

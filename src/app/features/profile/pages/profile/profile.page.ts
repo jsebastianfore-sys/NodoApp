@@ -28,10 +28,13 @@ import {
   logOutOutline,
   logoGoogle,
 } from 'ionicons/icons';
-import { LocationsService } from '../core/services/locations.service';
-import { NotificationsService } from '../core/services/notifications.service';
-import { AuthService, UserProfile } from '../core/services/auth.service';
-import { PUNTOS } from '../home/home.page';
+import { LocationsService } from '../../../../core/services/locations.service';
+import { NotificationsService } from '../../../../core/services/notifications.service';
+import {
+  AuthService,
+  UserProfile,
+} from '../../../../core/services/auth.service';
+import { PUNTOS } from '../../../../features/map/pages/map/map.page';
 import { Observable } from 'rxjs';
 
 @Component({

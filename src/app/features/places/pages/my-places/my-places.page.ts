@@ -24,13 +24,13 @@ import {
   searchOutline,
   bookmarkOutline,
 } from 'ionicons/icons';
-import { PlaceDetailModalComponent } from '../shared/components/place-detail-modal/place-detail-modal.component';
-import { LocationsService } from '../core/services/locations.service';
+import { PlaceDetailModalComponent } from '../../../../shared/components/place-detail-modal/place-detail-modal.component';
+import { LocationsService } from '../../../../core/services/locations.service';
 
 @Component({
-  selector: 'app-locations',
-  templateUrl: './locations.page.html',
-  styleUrls: ['./locations.page.scss'],
+  selector: 'app-my-places',
+  templateUrl: './my-places.page.html',
+  styleUrls: ['./my-places.page.scss'],
   imports: [
     IonContent,
     IonHeader,
