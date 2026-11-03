@@ -77,7 +77,30 @@
       border-radius: 20px;
       width: fit-content;
       border: 1px solid rgba(255, 255, 255, 0.3);
+
+      &.google-badge {
+        background: rgba(255, 255, 255, 0.95);
+        color: #0f172a;
+        border-color: #ffffff;
+
+        ion-icon {
+          color: #ea4335;
+        }
+      }
     }
+
+    .user-email-text {
+      color: rgba(255, 255, 255, 0.85);
+      font-size: 12.5px;
+      font-weight: 500;
+    }
+  }
+
+  .user-avatar-img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
   }
 }
 
@@ -330,6 +353,36 @@
 
       &:hover, &:active {
         background: #ef4444;
+        color: #ffffff;
+      }
+    }
+  }
+
+  &.session-card {
+    border-color: rgba(79, 70, 229, 0.15);
+
+    .btn-logout {
+      width: 100%;
+      background: rgba(79, 70, 229, 0.08);
+      color: var(--ion-color-primary, #4f46e5);
+      border: 1px solid rgba(79, 70, 229, 0.25);
+      border-radius: 12px;
+      padding: 12px;
+      font-size: 13.5px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+
+      ion-icon {
+        font-size: 17px;
+      }
+
+      &:hover, &:active {
+        background: var(--ion-color-primary, #4f46e5);
         color: #ffffff;
       }
     }

@@ -6,20 +6,42 @@
 
 <ion-content class="profile-content ion-padding">
   <!-- User Card -->
-  <div class="user-hero-card">
-    <div class="avatar-ring">
-      <div class="avatar-inner">
-        <ion-icon name="person-outline"></ion-icon>
+  <ng-container *ngIf="(currentUser$ | async) as user; else defaultUser">
+    <div class="user-hero-card">
+      <div class="avatar-ring">
+        <div class="avatar-inner">
+          <img *ngIf="user.avatar" [src]="user.avatar" alt="Avatar" class="user-avatar-img" />
+          <ion-icon *ngIf="!user.avatar" name="person-outline"></ion-icon>
+        </div>
+      </div>
+
+      <div class="user-info">
+        <h2 class="user-name">{{ user.nombre }}</h2>
+        <span class="user-email-text">{{ user.email }}</span>
+        <span class="user-badge" [class.google-badge]="user.provider === 'google'">
+          <ion-icon [name]="user.provider === 'google' ? 'logo-google' : 'sparkles-outline'"></ion-icon>
+          {{ user.provider === 'google' ? 'Cuenta Google' : 'GeoExplore Pro' }}
+        </span>
       </div>
     </div>
+  </ng-container>
 
-    <div class="user-info">
-      <h2 class="user-name">Explorador Urbano</h2>
-      <span class="user-badge">
-        <ion-icon name="sparkles-outline"></ion-icon> GeoExplore Pro
-      </span>
+  <ng-template #defaultUser>
+    <div class="user-hero-card">
+      <div class="avatar-ring">
+        <div class="avatar-inner">
+          <ion-icon name="person-outline"></ion-icon>
+        </div>
+      </div>
+
+      <div class="user-info">
+        <h2 class="user-name">Explorador Urbano</h2>
+        <span class="user-badge">
+          <ion-icon name="sparkles-outline"></ion-icon> GeoExplore Pro
+        </span>
+      </div>
     </div>
-  </div>
+  </ng-template>
 
   <!-- Statistics Grid -->
   <div class="stats-grid">
@@ -127,6 +149,17 @@
     <button class="btn-clear-data" (click)="confirmarLimpiarTodo()">
       <ion-icon name="trash-outline"></ion-icon>
       <span>Borrar todos los lugares guardados</span>
+    </button>
+  </div>
+
+  <!-- Sesión y Cuenta -->
+  <div class="settings-card session-card">
+    <h3 class="section-title">Sesión y Cuenta</h3>
+    <p class="section-desc">Puedes cerrar tu sesión para cambiar de usuario o ingresar con otra cuenta.</p>
+
+    <button class="btn-logout" (click)="confirmarCerrarSesion()">
+      <ion-icon name="log-out-outline"></ion-icon>
+      <span>Cerrar Sesión</span>
     </button>
   </div>
 
