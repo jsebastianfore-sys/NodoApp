@@ -9,7 +9,6 @@ import {
   IonIcon,
 } from '@ionic/angular';
 import { Router } from '@angular/router';
-import { PUNTOS, PuntoInteres } from '../../../map/pages/map/map.page';
 import { addIcons } from 'ionicons';
 import {
   mapOutline,
@@ -19,6 +18,7 @@ import {
   locationOutline,
   bookmarkOutline,
 } from 'ionicons/icons';
+import { PuntoInteres, PUNTOS } from '../../data/points-of-interest';
 
 @Component({
   selector: 'app-points-of-interest',

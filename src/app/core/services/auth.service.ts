@@ -1,17 +1,8 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Router } from '@angular/router';
 import { environment } from '../../../environments/environment';
-
-export interface UserProfile {
-  id: string;
-  nombre: string;
-  email: string;
-  avatar?: string;
-  provider: 'local' | 'google';
-  createdAt: string;
-  accessToken?: string;
-}
+import { UserProfile } from '../models/user.model';
 
 declare const google: any;
 
@@ -27,8 +18,9 @@ export class AuthService {
     this.currentUserSubject.asObservable();
 
   private isScriptLoaded = false;
-
-  constructor(private router: Router) {
+  private readonly router = inject(Router);
+  constructor() {
+    // private readonly router: inject(Router);
     this.cargarUsuarioGuardado();
   }
 

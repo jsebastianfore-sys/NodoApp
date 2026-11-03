@@ -30,12 +30,11 @@ import {
 } from 'ionicons/icons';
 import { LocationsService } from '../../../../core/services/locations.service';
 import { NotificationsService } from '../../../../core/services/notifications.service';
-import {
-  AuthService,
-  UserProfile,
-} from '../../../../core/services/auth.service';
-import { PUNTOS } from '../../../../features/map/pages/map/map.page';
+import { AuthService } from '../../../../core/services/auth.service';
+
 import { Observable } from 'rxjs';
+import { PUNTOS } from '../../../places/data/points-of-interest';
+import { UserProfile } from '../../../../core/models/user.model';
 
 @Component({
   selector: 'app-profile',
