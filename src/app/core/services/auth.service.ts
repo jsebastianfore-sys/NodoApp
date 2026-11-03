@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Router } from '@angular/router';
-import { environment } from '../../environments/environment';
+import { environment } from '../../../environments/environment';
 
 export interface UserProfile {
   id: string;
@@ -16,14 +16,15 @@ export interface UserProfile {
 declare const google: any;
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
   private readonly USER_STORAGE_KEY = 'geoexplore_current_user';
   private readonly GOOGLE_CLIENT_ID_KEY = 'geoexplore_google_client_id';
 
   private currentUserSubject = new BehaviorSubject<UserProfile | null>(null);
-  public currentUser$: Observable<UserProfile | null> = this.currentUserSubject.asObservable();
+  public currentUser$: Observable<UserProfile | null> =
+    this.currentUserSubject.asObservable();
 
   private isScriptLoaded = false;
 
@@ -40,7 +41,11 @@ export class AuthService {
       try {
         const user = JSON.parse(raw) as UserProfile;
         // Si la sesión guardada era de invitado (guest), eliminarla de inmediato
-        if (!user || (user as any).provider === 'guest' || user.email === 'invitado@geoexplore.app') {
+        if (
+          !user ||
+          (user as any).provider === 'guest' ||
+          user.email === 'invitado@geoexplore.app'
+        ) {
           localStorage.removeItem(this.USER_STORAGE_KEY);
           this.currentUserSubject.next(null);
           return;
@@ -115,7 +120,10 @@ export class AuthService {
         this.isScriptLoaded = true;
         resolve();
       };
-      script.onerror = () => reject(new Error('No se pudo descargar el SDK de Google Identity Services.'));
+      script.onerror = () =>
+        reject(
+          new Error('No se pudo descargar el SDK de Google Identity Services.'),
+        );
       document.head.appendChild(script);
     });
   }
@@ -142,20 +150,29 @@ export class AuthService {
           scope: 'openid email profile',
           callback: async (tokenResponse: any) => {
             if (tokenResponse.error) {
-              reject(new Error(tokenResponse.error_description || tokenResponse.error));
+              reject(
+                new Error(
+                  tokenResponse.error_description || tokenResponse.error,
+                ),
+              );
               return;
             }
 
             try {
               // Consultar la API oficial de Google UserInfo con el token recibido
-              const response = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
-                headers: {
-                  Authorization: `Bearer ${tokenResponse.access_token}`
-                }
-              });
+              const response = await fetch(
+                'https://www.googleapis.com/oauth2/v3/userinfo',
+                {
+                  headers: {
+                    Authorization: `Bearer ${tokenResponse.access_token}`,
+                  },
+                },
+              );
 
               if (!response.ok) {
-                throw new Error('Error al obtener el perfil de la cuenta de Google.');
+                throw new Error(
+                  'Error al obtener el perfil de la cuenta de Google.',
+                );
               }
 
               const info = await response.json();
@@ -164,10 +181,12 @@ export class AuthService {
                 id: info.sub || 'google_' + Date.now(),
                 nombre: info.name || info.given_name || 'Usuario Google',
                 email: info.email,
-                avatar: info.picture || 'https://lh3.googleusercontent.com/a/default-user=s120-p',
+                avatar:
+                  info.picture ||
+                  'https://lh3.googleusercontent.com/a/default-user=s120-p',
                 provider: 'google',
                 createdAt: new Date().toISOString(),
-                accessToken: tokenResponse.access_token
+                accessToken: tokenResponse.access_token,
               };
 
               this.persistirSesion(user);
@@ -177,14 +196,23 @@ export class AuthService {
             }
           },
           error_callback: (error: any) => {
-            reject(new Error(error.message || 'Error al abrir la ventana de Google.'));
-          }
+            reject(
+              new Error(
+                error.message || 'Error al abrir la ventana de Google.',
+              ),
+            );
+          },
         });
 
         // Abre el cuadro oficial de inicio de sesión de Google
         tokenClient.requestAccessToken({ prompt: 'select_account' });
       } catch (err: any) {
-        reject(new Error(err.message || 'No se pudo iniciar el flujo de autenticación con Google.'));
+        reject(
+          new Error(
+            err.message ||
+              'No se pudo iniciar el flujo de autenticación con Google.',
+          ),
+        );
       }
     });
   }
@@ -193,16 +221,21 @@ export class AuthService {
    * Ingreso instantáneo seleccionando cuenta de Google
    * (Sin necesidad de contraseña ni formulario de registro manual)
    */
-  public async loginWithGoogleEmail(email: string, nombre?: string): Promise<UserProfile> {
-    await new Promise(resolve => setTimeout(resolve, 600));
+  public async loginWithGoogleEmail(
+    email: string,
+    nombre?: string,
+  ): Promise<UserProfile> {
+    await new Promise((resolve) => setTimeout(resolve, 600));
 
     if (!email || !email.includes('@')) {
       throw new Error('Por favor ingresa un correo de Google válido.');
     }
 
     const emailNormalizado = email.trim().toLowerCase();
-    const nombreLimpio = nombre?.trim() || emailNormalizado.split('@')[0].replace(/[._]/g, ' ');
-    const capitalizado = nombreLimpio.charAt(0).toUpperCase() + nombreLimpio.slice(1);
+    const nombreLimpio =
+      nombre?.trim() || emailNormalizado.split('@')[0].replace(/[._]/g, ' ');
+    const capitalizado =
+      nombreLimpio.charAt(0).toUpperCase() + nombreLimpio.slice(1);
 
     const user: UserProfile = {
       id: 'google_' + Date.now(),
@@ -210,7 +243,7 @@ export class AuthService {
       email: emailNormalizado,
       avatar: `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(capitalizado)}&backgroundColor=4285F4`,
       provider: 'google',
-      createdAt: new Date().toISOString()
+      createdAt: new Date().toISOString(),
     };
 
     this.persistirSesion(user);
@@ -221,7 +254,7 @@ export class AuthService {
    * Iniciar sesión con correo y contraseña.
    */
   public async login(email: string, password: string): Promise<UserProfile> {
-    await new Promise(resolve => setTimeout(resolve, 800));
+    await new Promise((resolve) => setTimeout(resolve, 800));
 
     if (!email || !password) {
       throw new Error('Por favor completa todos los campos.');
@@ -232,7 +265,8 @@ export class AuthService {
     }
 
     const nombreGenerado = email.split('@')[0].replace(/[._]/g, ' ');
-    const capitalizado = nombreGenerado.charAt(0).toUpperCase() + nombreGenerado.slice(1);
+    const capitalizado =
+      nombreGenerado.charAt(0).toUpperCase() + nombreGenerado.slice(1);
 
     const user: UserProfile = {
       id: 'usr_' + Date.now(),
@@ -240,7 +274,7 @@ export class AuthService {
       email: email.trim().toLowerCase(),
       avatar: `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(email)}`,
       provider: 'local',
-      createdAt: new Date().toISOString()
+      createdAt: new Date().toISOString(),
     };
 
     this.persistirSesion(user);
@@ -250,8 +284,12 @@ export class AuthService {
   /**
    * Registro de nueva cuenta con nombre, correo y contraseña.
    */
-  public async register(nombre: string, email: string, password: string): Promise<UserProfile> {
-    await new Promise(resolve => setTimeout(resolve, 900));
+  public async register(
+    nombre: string,
+    email: string,
+    password: string,
+  ): Promise<UserProfile> {
+    await new Promise((resolve) => setTimeout(resolve, 900));
 
     if (!nombre || !email || !password) {
       throw new Error('Por favor completa todos los campos requeridos.');
@@ -267,7 +305,7 @@ export class AuthService {
       email: email.trim().toLowerCase(),
       avatar: `https://api.dicebear.com/7.x/bottts/svg?seed=${encodeURIComponent(email)}`,
       provider: 'local',
-      createdAt: new Date().toISOString()
+      createdAt: new Date().toISOString(),
     };
 
     this.persistirSesion(user);
@@ -278,7 +316,7 @@ export class AuthService {
    * Simular recuperación de contraseña
    */
   public async requestPasswordReset(email: string): Promise<void> {
-    await new Promise(resolve => setTimeout(resolve, 700));
+    await new Promise((resolve) => setTimeout(resolve, 700));
     if (!email) {
       throw new Error('Ingresa un correo electrónico válido.');
     }

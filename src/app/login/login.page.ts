@@ -3,17 +3,35 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import {
-  IonContent, IonIcon, IonSpinner, ToastController, LoadingController, AlertController
+  IonContent,
+  IonIcon,
+  IonSpinner,
+  ToastController,
+  LoadingController,
+  AlertController,
 } from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import {
-  mailOutline, lockClosedOutline, personOutline, eyeOutline,
-  eyeOffOutline, arrowBackOutline, logoGoogle, logoApple,
-  logoFacebook, compassOutline, sparklesOutline, arrowForwardOutline,
-  chevronBackOutline, logInOutline, personAddOutline,
-  shieldCheckmarkOutline, helpCircleOutline, closeOutline
+  mailOutline,
+  lockClosedOutline,
+  personOutline,
+  eyeOutline,
+  eyeOffOutline,
+  arrowBackOutline,
+  logoGoogle,
+  logoApple,
+  logoFacebook,
+  compassOutline,
+  sparklesOutline,
+  arrowForwardOutline,
+  chevronBackOutline,
+  logInOutline,
+  personAddOutline,
+  shieldCheckmarkOutline,
+  helpCircleOutline,
+  closeOutline,
 } from 'ionicons/icons';
-import { AuthService, UserProfile } from '../services/auth.service';
+import { AuthService, UserProfile } from '../core/services/auth.service';
 
 type AuthViewMode = 'welcome' | 'login' | 'register' | 'forgot';
 
@@ -21,10 +39,7 @@ type AuthViewMode = 'welcome' | 'login' | 'register' | 'forgot';
   selector: 'app-login',
   templateUrl: './login.page.html',
   styleUrls: ['./login.page.scss'],
-  imports: [
-    IonContent, IonIcon, IonSpinner,
-    CommonModule, FormsModule
-  ]
+  imports: [IonContent, IonIcon, IonSpinner, CommonModule, FormsModule],
 })
 export class LoginPage implements OnInit {
   // Modo de vista actual: 'welcome' (como pantalla 1), 'login' (como pantalla 2), 'register' o 'forgot'
@@ -79,7 +94,7 @@ export class LoginPage implements OnInit {
       personAddOutline,
       shieldCheckmarkOutline,
       helpCircleOutline,
-      closeOutline
+      closeOutline,
     });
   }
 
@@ -116,7 +131,10 @@ export class LoginPage implements OnInit {
 
     this.isLoading = true;
     try {
-      const user = await this.authService.login(this.loginEmail, this.loginPassword);
+      const user = await this.authService.login(
+        this.loginEmail,
+        this.loginPassword,
+      );
       await this.mostrarToast(`¡Bienvenido de nuevo, ${user.nombre}!`);
       this.router.navigate(['/map']);
     } catch (err: any) {
@@ -132,7 +150,11 @@ export class LoginPage implements OnInit {
   async submitRegister() {
     this.errorMessage = '';
 
-    if (!this.registerName.trim() || !this.registerEmail.trim() || !this.registerPassword) {
+    if (
+      !this.registerName.trim() ||
+      !this.registerEmail.trim() ||
+      !this.registerPassword
+    ) {
       this.errorMessage = 'Todos los campos son obligatorios.';
       return;
     }
@@ -152,9 +174,11 @@ export class LoginPage implements OnInit {
       const user = await this.authService.register(
         this.registerName,
         this.registerEmail,
-        this.registerPassword
+        this.registerPassword,
       );
-      await this.mostrarToast(`¡Cuenta creada con éxito! Bienvenido, ${user.nombre}`);
+      await this.mostrarToast(
+        `¡Cuenta creada con éxito! Bienvenido, ${user.nombre}`,
+      );
       this.router.navigate(['/map']);
     } catch (err: any) {
       this.errorMessage = err.message || 'Error al crear la cuenta.';
@@ -177,7 +201,9 @@ export class LoginPage implements OnInit {
       this.isLoading = true;
       try {
         const user = await this.authService.loginWithGoogle();
-        await this.mostrarToast(`¡Bienvenido, ${user.nombre}! Has iniciado sesión con Google.`);
+        await this.mostrarToast(
+          `¡Bienvenido, ${user.nombre}! Has iniciado sesión con Google.`,
+        );
         this.router.navigate(['/map']);
       } catch (err: any) {
         if (err.message === 'MISSING_CLIENT_ID') {
@@ -200,8 +226,12 @@ export class LoginPage implements OnInit {
   async confirmGooglePickerLogin() {
     this.errorMessage = '';
 
-    if (!this.googlePickerEmail.trim() || !this.googlePickerEmail.includes('@')) {
-      this.errorMessage = 'Por favor ingresa un correo de Google válido (ej: tu.correo@gmail.com).';
+    if (
+      !this.googlePickerEmail.trim() ||
+      !this.googlePickerEmail.includes('@')
+    ) {
+      this.errorMessage =
+        'Por favor ingresa un correo de Google válido (ej: tu.correo@gmail.com).';
       return;
     }
 
@@ -209,13 +239,16 @@ export class LoginPage implements OnInit {
     try {
       const user = await this.authService.loginWithGoogleEmail(
         this.googlePickerEmail,
-        this.googlePickerName
+        this.googlePickerName,
       );
       this.showGooglePicker = false;
-      await this.mostrarToast(`¡Cuenta Google verificada! Bienvenido, ${user.nombre}`);
+      await this.mostrarToast(
+        `¡Cuenta Google verificada! Bienvenido, ${user.nombre}`,
+      );
       this.router.navigate(['/map']);
     } catch (err: any) {
-      this.errorMessage = err.message || 'Error al conectar con tu cuenta de Google.';
+      this.errorMessage =
+        err.message || 'Error al conectar con tu cuenta de Google.';
     } finally {
       this.isLoading = false;
     }
@@ -232,19 +265,20 @@ export class LoginPage implements OnInit {
     const alert = await this.alertCtrl.create({
       header: 'Autenticación Real con Google',
       subHeader: 'Se requiere tu Client ID de Google Cloud',
-      message: 'Para abrir la ventana oficial de Google, ingresa el Client ID OAuth 2.0 de tu consola de Google Cloud (también puedes definirlo en src/environments/environment.ts):',
+      message:
+        'Para abrir la ventana oficial de Google, ingresa el Client ID OAuth 2.0 de tu consola de Google Cloud (también puedes definirlo en src/environments/environment.ts):',
       inputs: [
         {
           name: 'clientId',
           type: 'text',
           placeholder: 'ej: 123456789-xyz.apps.googleusercontent.com',
-          value: this.authService.getGoogleClientId()
-        }
+          value: this.authService.getGoogleClientId(),
+        },
       ],
       buttons: [
         {
           text: 'Cancelar',
-          role: 'cancel'
+          role: 'cancel',
         },
         {
           text: 'Conectar con Google',
@@ -254,11 +288,12 @@ export class LoginPage implements OnInit {
               this.authService.setGoogleClientId(val);
               setTimeout(() => this.submitGoogleLogin(), 250);
             } else {
-              this.errorMessage = 'Debes ingresar un Google Client ID válido para autenticar con Google.';
+              this.errorMessage =
+                'Debes ingresar un Google Client ID válido para autenticar con Google.';
             }
-          }
-        }
-      ]
+          },
+        },
+      ],
     });
 
     await alert.present();
@@ -268,7 +303,9 @@ export class LoginPage implements OnInit {
    * Notificación para redes sociales aún en desarrollo
    */
   async socialLoginComingSoon(provider: string) {
-    await this.mostrarToast(`El acceso con ${provider} estará disponible próximamente. Por favor inicia sesión con Google o correo.`);
+    await this.mostrarToast(
+      `El acceso con ${provider} estará disponible próximamente. Por favor inicia sesión con Google o correo.`,
+    );
   }
 
   /**
@@ -286,7 +323,8 @@ export class LoginPage implements OnInit {
       await this.mostrarToast('Se enviaron las instrucciones a tu correo.');
       this.setMode('login');
     } catch (err: any) {
-      this.errorMessage = err.message || 'No se pudo enviar el correo de recuperación.';
+      this.errorMessage =
+        err.message || 'No se pudo enviar el correo de recuperación.';
     } finally {
       this.isLoading = false;
     }
@@ -297,9 +335,8 @@ export class LoginPage implements OnInit {
       message: msg,
       duration: 2500,
       position: 'top',
-      cssClass: 'auth-toast'
+      cssClass: 'auth-toast',
     });
     await toast.present();
   }
 }
-

@@ -2,27 +2,44 @@ import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
-  IonContent, IonHeader, IonTitle, IonToolbar, IonIcon,
-  ModalController, AlertController
+  IonContent,
+  IonHeader,
+  IonTitle,
+  IonToolbar,
+  IonIcon,
+  ModalController,
+  AlertController,
 } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { addIcons } from 'ionicons';
 import {
-  locationOutline, trashOutline, navigateOutline,
-  eyeOutline, calendarOutline, cameraOutline, mapOutline,
-  sparklesOutline, searchOutline, bookmarkOutline
+  locationOutline,
+  trashOutline,
+  navigateOutline,
+  eyeOutline,
+  calendarOutline,
+  cameraOutline,
+  mapOutline,
+  sparklesOutline,
+  searchOutline,
+  bookmarkOutline,
 } from 'ionicons/icons';
 import { PlaceDetailModalComponent } from '../place-detail-modal/place-detail-modal.component';
-import { LocationsService } from '../services/locations';
+import { LocationsService } from '../core/services/locations.service';
 
 @Component({
   selector: 'app-locations',
   templateUrl: './locations.page.html',
   styleUrls: ['./locations.page.scss'],
   imports: [
-    IonContent, IonHeader, IonTitle, IonToolbar, IonIcon,
-    CommonModule, FormsModule
-  ]
+    IonContent,
+    IonHeader,
+    IonTitle,
+    IonToolbar,
+    IonIcon,
+    CommonModule,
+    FormsModule,
+  ],
 })
 export class LocationsPage implements OnInit {
   ubicaciones: any[] = [];
@@ -46,25 +63,31 @@ export class LocationsPage implements OnInit {
       mapOutline,
       sparklesOutline,
       searchOutline,
-      bookmarkOutline
+      bookmarkOutline,
     });
   }
 
   ngOnInit() {
-    this.locationsService.ubicaciones$.subscribe(ubicaciones => {
+    this.locationsService.ubicaciones$.subscribe((ubicaciones) => {
       this.ubicaciones = ubicaciones;
       try {
         this.cdr.detectChanges();
-      } catch (e) { }
+      } catch (e) {}
     });
   }
 
   get ubicacionesFiltradas(): any[] {
-    return this.ubicaciones.filter(ub => {
-      const matchText = this.filtroTexto.trim() === '' ||
-        (ub.title && ub.title.toLowerCase().includes(this.filtroTexto.toLowerCase())) ||
-        (ub.description && ub.description.toLowerCase().includes(this.filtroTexto.toLowerCase())) ||
-        (ub.category && ub.category.toLowerCase().includes(this.filtroTexto.toLowerCase()));
+    return this.ubicaciones.filter((ub) => {
+      const matchText =
+        this.filtroTexto.trim() === '' ||
+        (ub.title &&
+          ub.title.toLowerCase().includes(this.filtroTexto.toLowerCase())) ||
+        (ub.description &&
+          ub.description
+            .toLowerCase()
+            .includes(this.filtroTexto.toLowerCase())) ||
+        (ub.category &&
+          ub.category.toLowerCase().includes(this.filtroTexto.toLowerCase()));
 
       let matchCat = true;
       if (this.categoriaActiva === 'Con foto') {
@@ -94,9 +117,9 @@ export class LocationsPage implements OnInit {
           role: 'destructive',
           handler: () => {
             this.locationsService.eliminarUbicacion(index);
-          }
-        }
-      ]
+          },
+        },
+      ],
     });
 
     await alert.present();
@@ -104,13 +127,15 @@ export class LocationsPage implements OnInit {
 
   irAlMapa(lat: number, lng: number, event?: Event) {
     if (event) event.stopPropagation();
-    this.router.navigate(['/map'], { queryParams: { destLat: lat, destLng: lng } });
+    this.router.navigate(['/map'], {
+      queryParams: { destLat: lat, destLng: lng },
+    });
   }
 
   async verDetalle(ubi: any) {
     const modal = await this.modalCtrl.create({
       component: PlaceDetailModalComponent,
-      componentProps: { place: ubi }
+      componentProps: { place: ubi },
     });
 
     await modal.present();
