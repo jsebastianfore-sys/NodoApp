@@ -22,7 +22,7 @@ import {
   alarmOutline,
   timeOutline,
 } from 'ionicons/icons';
-import { NotificationsService } from '../core/services/notifications.service';
+import { NotificationsService } from '../../../core/services/notifications.service';
 
 @Component({
   selector: 'app-place-detail-modal',

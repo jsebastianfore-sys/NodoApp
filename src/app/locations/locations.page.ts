@@ -24,7 +24,7 @@ import {
   searchOutline,
   bookmarkOutline,
 } from 'ionicons/icons';
-import { PlaceDetailModalComponent } from '../place-detail-modal/place-detail-modal.component';
+import { PlaceDetailModalComponent } from '../shared/components/place-detail-modal/place-detail-modal.component';
 import { LocationsService } from '../core/services/locations.service';
 
 @Component({

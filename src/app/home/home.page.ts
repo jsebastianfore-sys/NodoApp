@@ -31,8 +31,8 @@ import {
   sparklesOutline,
   compassOutline,
 } from 'ionicons/icons';
-import { LocationModalComponent } from '../location-modal/location-modal.component';
-import { PlaceDetailModalComponent } from '../place-detail-modal/place-detail-modal.component';
+import { LocationModalComponent } from '../shared/components/location-modal/location-modal.component';
+import { PlaceDetailModalComponent } from '../shared/components/place-detail-modal/place-detail-modal.component';
 import { LocationsService } from '../core/services/locations.service';
 import { NotificationsService } from '../core/services/notifications.service';
 
