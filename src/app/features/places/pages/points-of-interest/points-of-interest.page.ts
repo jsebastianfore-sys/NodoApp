@@ -2,31 +2,52 @@ import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
-  IonContent, IonHeader, IonTitle, IonToolbar, IonIcon
+  IonContent,
+  IonHeader,
+  IonTitle,
+  IonToolbar,
+  IonIcon,
 } from '@ionic/angular';
 import { Router } from '@angular/router';
-import { PUNTOS, PuntoInteres } from '../home/home.page';
 import { addIcons } from 'ionicons';
 import {
-  mapOutline, businessOutline, searchOutline,
-  navigateOutline, locationOutline, bookmarkOutline
+  mapOutline,
+  businessOutline,
+  searchOutline,
+  navigateOutline,
+  locationOutline,
+  bookmarkOutline,
 } from 'ionicons/icons';
+import { PuntoInteres, PUNTOS } from '../../data/points-of-interest';
 
 @Component({
-  selector: 'app-places',
-  templateUrl: './places.page.html',
-  styleUrls: ['./places.page.scss'],
+  selector: 'app-points-of-interest',
+  templateUrl: './points-of-interest.page.html',
+  styleUrls: ['./points-of-interest.page.scss'],
   imports: [
-    IonContent, IonHeader, IonTitle, IonToolbar, IonIcon,
-    CommonModule, FormsModule
-  ]
+    IonContent,
+    IonHeader,
+    IonTitle,
+    IonToolbar,
+    IonIcon,
+    CommonModule,
+    FormsModule,
+  ],
 })
-export class PlacesPage implements OnInit {
+export class PointsOfInterestPage implements OnInit {
   puntos: PuntoInteres[] = PUNTOS;
   filtroTexto: string = '';
   categoriaActiva: string = 'Todos';
 
-  categorias: string[] = ['Todos', 'Parque', 'Estadio', 'Universidad', 'Centro_Comercial', 'Museo_Nacional', 'biblioteca'];
+  categorias: string[] = [
+    'Todos',
+    'Parque',
+    'Estadio',
+    'Universidad',
+    'Centro_Comercial',
+    'Museo_Nacional',
+    'biblioteca',
+  ];
 
   private router = inject(Router);
 
@@ -37,19 +58,21 @@ export class PlacesPage implements OnInit {
       searchOutline,
       navigateOutline,
       locationOutline,
-      bookmarkOutline
+      bookmarkOutline,
     });
   }
 
   ngOnInit() {}
 
   get puntosFiltrados(): PuntoInteres[] {
-    return this.puntos.filter(p => {
-      const matchText = this.filtroTexto.trim() === '' ||
+    return this.puntos.filter((p) => {
+      const matchText =
+        this.filtroTexto.trim() === '' ||
         p.nombre.toLowerCase().includes(this.filtroTexto.toLowerCase()) ||
         p.tipo.toLowerCase().includes(this.filtroTexto.toLowerCase());
 
-      const matchCat = this.categoriaActiva === 'Todos' || p.tipo === this.categoriaActiva;
+      const matchCat =
+        this.categoriaActiva === 'Todos' || p.tipo === this.categoriaActiva;
       return matchText && matchCat;
     });
   }
@@ -59,7 +82,9 @@ export class PlacesPage implements OnInit {
   }
 
   irAlMapa(lat: number, lng: number) {
-    this.router.navigate(['/map'], { queryParams: { destLat: lat, destLng: lng } });
+    this.router.navigate(['/map'], {
+      queryParams: { destLat: lat, destLng: lng },
+    });
   }
 
   obtenerEmoji(tipo: string): string {
@@ -83,7 +108,7 @@ export class PlacesPage implements OnInit {
       Mcdonalds: '🍔',
       Cine_Colombia: '🎬',
       Homecenter_El_Dorado: '🔨',
-      Tienda_D1_Normandia: '🏬'
+      Tienda_D1_Normandia: '🏬',
     };
     return map[tipo] || '📍';
   }

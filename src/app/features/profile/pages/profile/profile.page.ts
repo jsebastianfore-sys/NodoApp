@@ -2,32 +2,53 @@ import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
-  IonContent, IonHeader, IonTitle, IonToolbar, IonIcon,
-  AlertController, ToastController
+  IonContent,
+  IonHeader,
+  IonTitle,
+  IonToolbar,
+  IonIcon,
+  AlertController,
+  ToastController,
 } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { addIcons } from 'ionicons';
 import {
-  personOutline, locationOutline, cameraOutline,
-  mapOutline, trashOutline, shieldCheckmarkOutline,
-  sparklesOutline, chevronForwardOutline, informationCircleOutline,
-  notificationsOutline, notificationsCircleOutline, checkmarkCircleOutline,
-  logOutOutline, logoGoogle
+  personOutline,
+  locationOutline,
+  cameraOutline,
+  mapOutline,
+  trashOutline,
+  shieldCheckmarkOutline,
+  sparklesOutline,
+  chevronForwardOutline,
+  informationCircleOutline,
+  notificationsOutline,
+  notificationsCircleOutline,
+  checkmarkCircleOutline,
+  logOutOutline,
+  logoGoogle,
 } from 'ionicons/icons';
-import { LocationsService } from '../services/locations';
-import { NotificationsService } from '../services/notifications.service';
-import { AuthService, UserProfile } from '../services/auth.service';
-import { PUNTOS } from '../home/home.page';
+import { LocationsService } from '../../../../core/services/locations.service';
+import { NotificationsService } from '../../../../core/services/notifications.service';
+import { AuthService } from '../../../../core/services/auth.service';
+
 import { Observable } from 'rxjs';
+import { PUNTOS } from '../../../places/data/points-of-interest';
+import { UserProfile } from '../../../../core/models/user.model';
 
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.page.html',
   styleUrls: ['./profile.page.scss'],
   imports: [
-    IonContent, IonHeader, IonTitle, IonToolbar, IonIcon,
-    CommonModule, FormsModule
-  ]
+    IonContent,
+    IonHeader,
+    IonTitle,
+    IonToolbar,
+    IonIcon,
+    CommonModule,
+    FormsModule,
+  ],
 })
 export class ProfilePage implements OnInit {
   totalLugares = 0;
@@ -36,7 +57,8 @@ export class ProfilePage implements OnInit {
   permisoNotificaciones: 'granted' | 'denied' | 'prompt' = 'prompt';
 
   public authService = inject(AuthService);
-  public currentUser$: Observable<UserProfile | null> = this.authService.currentUser$;
+  public currentUser$: Observable<UserProfile | null> =
+    this.authService.currentUser$;
 
   private locationsService = inject(LocationsService);
   private notificationsService = inject(NotificationsService);
@@ -59,28 +81,31 @@ export class ProfilePage implements OnInit {
       notificationsCircleOutline,
       checkmarkCircleOutline,
       logOutOutline,
-      logoGoogle
+      logoGoogle,
     });
   }
 
   async ngOnInit() {
-    this.locationsService.ubicaciones$.subscribe(ubicaciones => {
+    this.locationsService.ubicaciones$.subscribe((ubicaciones) => {
       this.totalLugares = ubicaciones.length;
-      this.totalConFoto = ubicaciones.filter(u => !!u.photo).length;
+      this.totalConFoto = ubicaciones.filter((u) => !!u.photo).length;
     });
 
     await this.actualizarEstadoPermiso();
   }
 
   async actualizarEstadoPermiso() {
-    this.permisoNotificaciones = await this.notificationsService.obtenerEstadoPermiso();
+    this.permisoNotificaciones =
+      await this.notificationsService.obtenerEstadoPermiso();
   }
 
   async solicitarPermisoNotificaciones() {
     const concedido = await this.notificationsService.verificarPermisos();
     await this.actualizarEstadoPermiso();
     if (concedido) {
-      this.mostrarToast('✅ Permisos de notificaciones concedidos correctamente');
+      this.mostrarToast(
+        '✅ Permisos de notificaciones concedidos correctamente',
+      );
     }
   }
 
@@ -95,7 +120,8 @@ export class ProfilePage implements OnInit {
   async confirmarLimpiarTodo() {
     const alert = await this.alertCtrl.create({
       header: 'Reiniciar Lugares',
-      message: '¿Estás seguro de que deseas eliminar todas las ubicaciones guardadas? Esta acción no se puede deshacer.',
+      message:
+        '¿Estás seguro de que deseas eliminar todas las ubicaciones guardadas? Esta acción no se puede deshacer.',
       buttons: [
         { text: 'Cancelar', role: 'cancel' },
         {
@@ -105,9 +131,9 @@ export class ProfilePage implements OnInit {
             localStorage.removeItem('misUbicaciones');
             this.locationsService.cargarUbicaciones();
             this.mostrarToast('Se han eliminado todos los lugares guardados.');
-          }
-        }
-      ]
+          },
+        },
+      ],
     });
 
     await alert.present();
@@ -125,9 +151,9 @@ export class ProfilePage implements OnInit {
           handler: () => {
             this.authService.logout();
             this.mostrarToast('Has cerrado sesión correctamente.');
-          }
-        }
-      ]
+          },
+        },
+      ],
     });
 
     await alert.present();
@@ -137,7 +163,7 @@ export class ProfilePage implements OnInit {
     const toast = await this.toastCtrl.create({
       message: msg,
       duration: 2500,
-      position: 'top'
+      position: 'top',
     });
     await toast.present();
   }

@@ -3,8 +3,9 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
+  apiUrl: 'http://localhost:3000/api/v1',
   production: false,
-  googleClientId: '' // Pega aquí tu Client ID de Google Cloud (ej: 123456789-xyz.apps.googleusercontent.com)
+  googleClientId: '', // Pega aquí tu Client ID de Google Cloud (ej: 123456789-xyz.apps.googleusercontent.com)
 };
 
 /*
